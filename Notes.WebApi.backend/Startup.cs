@@ -38,6 +38,16 @@ namespace Notes.WebApi.backend
             services.AddDbContext<AppDbContext>();
 
             services.AddTransient<INotesServices, NotesServices>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("NotesPolicy", builder =>
+                {
+                    builder.WithOrigins("*")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +63,9 @@ namespace Notes.WebApi.backend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // In this function order of execution matter. That's why we are not adding this at the end of the function.
+            app.UseCors("NotesPolicy");
 
             app.UseAuthorization();
 
