@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Notes.Core;
+using Notes.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,10 @@ namespace Notes.WebApi.backend
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Notes.WebApi.backend", Version = "v1" });
             });
+
+            services.AddDbContext<AppDbContext>();
+
+            services.AddTransient<INotesServices, NotesServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,7 +8,7 @@ using Notes.DB;
 
 namespace Notes.DB.Migrations
 {
-    [DbContext(typeof(BloggingContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20210517120252_Init")]
     partial class Init
     {

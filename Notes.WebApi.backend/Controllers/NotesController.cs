@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Notes.Core;
+using Notes.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +15,52 @@ namespace Notes.WebApi.backend.Controllers
     [ApiController]
     public class NotesController : ControllerBase
     {
+        private readonly ILogger<NotesController> _logger;
+        private readonly INotesServices _notesServices;
+
+        public NotesController(ILogger<NotesController> logger, INotesServices notesServices)
+        {
+            _logger = logger;
+            _notesServices = notesServices;
+        }
+
         // GET: api/<NotesController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetNotes()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_notesServices.GetNotes());
         }
 
         // GET api/<NotesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id}", Name ="GetNote")]
+        public IActionResult GetNote(int id)
         {
-            return "value";
+            return Ok(_notesServices.GetNote(id));
         }
-
+        
         // POST api/<NotesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult CreateNote(Note note)
         {
-        }
+            var newNote = _notesServices.CreateNote(note);
 
+            return CreatedAtRoute("GetNote", new { newNote.Id }, newNote);
+        }
+        
         // PUT api/<NotesController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult EditNote(int id, [FromBody] Note note)
         {
+            _notesServices.EditNote(id, note);
+            return Ok();
         }
 
         // DELETE api/<NotesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult DeleteNote(int id)
         {
+            _notesServices.DeleteNote(id);
+            return Ok();
         }
     }
 }

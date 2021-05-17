@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Notes.DB
 {
-    public class BloggingContext : DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<Note> Notes { get; set; }
 
